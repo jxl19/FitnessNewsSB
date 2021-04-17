@@ -19,7 +19,7 @@ public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "userID")
-	private Integer userID;
+	private Long userID;
 	
 	@Column(name = "email")
 	private String email;
@@ -31,25 +31,32 @@ public class Users {
 	@Column(name = "superUser")
 	private Boolean superUser;
 	
+	@Column(name = "resetPasswordToken")
+	private String resetPasswordToken;
+
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "users", fetch=FetchType.EAGER)
 	private PersonalInfo personalInfo;
-
-	public Users() {}
 	
-	public Users(Boolean superUser, String email, String password, Integer userID) {
+	public Users() {}
+
+	public Users(Long userID, String email, String password, Boolean superUser, String resetPasswordToken,
+			PersonalInfo personalInfo) {
 		super();
 		this.userID = userID;
 		this.email = email;
 		this.password = password;
 		this.superUser = superUser;
+		this.resetPasswordToken = resetPasswordToken;
+		this.personalInfo = personalInfo;
 	}
-	
 
-	public Integer getUserID() {
+
+
+	public Long getUserID() {
 		return userID;
 	}
 
-	public void setUserID(Integer userID) {
+	public void setUserID(Long userID) {
 		this.userID = userID;
 	}
 
@@ -76,13 +83,31 @@ public class Users {
 	public void setSuperUser(Boolean superUser) {
 		this.superUser = superUser;
 	}
-	
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
+	}
+
+	public PersonalInfo getPersonalInfo() {
+		return personalInfo;
+	}
+
+	public void setPersonalInfo(PersonalInfo personalInfo) {
+		this.personalInfo = personalInfo;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((personalInfo == null) ? 0 : personalInfo.hashCode());
+		result = prime * result + ((resetPasswordToken == null) ? 0 : resetPasswordToken.hashCode());
 		result = prime * result + ((superUser == null) ? 0 : superUser.hashCode());
 		result = prime * result + ((userID == null) ? 0 : userID.hashCode());
 		return result;
@@ -107,6 +132,16 @@ public class Users {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
+		if (personalInfo == null) {
+			if (other.personalInfo != null)
+				return false;
+		} else if (!personalInfo.equals(other.personalInfo))
+			return false;
+		if (resetPasswordToken == null) {
+			if (other.resetPasswordToken != null)
+				return false;
+		} else if (!resetPasswordToken.equals(other.resetPasswordToken))
+			return false;
 		if (superUser == null) {
 			if (other.superUser != null)
 				return false;
@@ -123,6 +158,9 @@ public class Users {
 	@Override
 	public String toString() {
 		return "Users [userID=" + userID + ", email=" + email + ", password=" + password + ", superUser=" + superUser
-				+ "]";
+				+ ", resetPasswordToken=" + resetPasswordToken + ", personalInfo=" + personalInfo + "]";
 	}
+
+	
+	
 }
