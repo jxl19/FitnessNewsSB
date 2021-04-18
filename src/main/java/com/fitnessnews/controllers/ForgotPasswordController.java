@@ -1,6 +1,8 @@
 package com.fitnessnews.controllers;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -39,7 +41,7 @@ public class ForgotPasswordController {
 		String token = RandomString.make(30);
 		try {
 			userService.updateResetPasswordToken(token, email);
-			String resetPasswordLink = Utility.getSiteURL(request) + "/resetpass/?token=" + token;
+			URL resetPasswordLink = new URL("http://localhost:4200" + "/resetpass/?token=" + token);
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
@@ -47,11 +49,13 @@ public class ForgotPasswordController {
 			model.addAttribute("error", ex.getMessage());
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Error while sending email");
+		} catch (MalformedURLException url) {
+			model.addAttribute("error", "error creating url");
 		}
 		return "working";
 	}
 
-	public void sendEmail(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
+	public void sendEmail(String recipientEmail, URL link) throws MessagingException, UnsupportedEncodingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
