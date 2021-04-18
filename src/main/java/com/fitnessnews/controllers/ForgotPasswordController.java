@@ -25,7 +25,7 @@ import com.fitnessnews.utilities.Utility;
 import net.bytebuddy.utility.RandomString;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/reset")
 public class ForgotPasswordController {
 	@Autowired
@@ -37,22 +37,16 @@ public class ForgotPasswordController {
 	@PostMapping("/forgotpass")
 	public String processForgotPassword(HttpServletRequest request, Model model, @RequestBody String email) {
 		String token = RandomString.make(30);
-		System.out.println(email);
 		try {
-			System.out.println("1");
 			userService.updateResetPasswordToken(token, email);
-			System.out.println("2");
 			String resetPasswordLink = Utility.getSiteURL(request) + "/resetpass?token=" + token;
-			System.out.println("3");
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
 		} catch (ResourceNotFoundException ex) {
 			model.addAttribute("error", ex.getMessage());
-			System.out.println("resource");
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Error while sending email");
-			System.out.println("Unsupported");
 		}
 		return "working";
 	}

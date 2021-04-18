@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Optional.*;
 
 import com.fitnessnews.exceptions.ResourceNotFoundException;
 import com.fitnessnews.models.Users;
@@ -23,7 +24,7 @@ import com.fitnessnews.repository.UsersRepository;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class UserController {
 
@@ -37,7 +38,13 @@ public class UserController {
 	public List<Users> getAllUsers() {
 		return usersRepository.findAll();
 	}
-
+	
+	@GetMapping("/users/{email}")
+	public ResponseEntity<Users> getEmployeeByEmail(@PathVariable(value = "email") String email) throws ResourceNotFoundException{
+		Users user = usersRepository.findByEmail(email);
+        return ResponseEntity.ok().body(user);
+	}
+	
 	@PutMapping("/updateinfo")
 	public ResponseEntity<Users> updateUsers(@PathVariable(value = "id") Long userID,
 			@Valid @RequestBody Users userDetails) throws ResourceNotFoundException {
