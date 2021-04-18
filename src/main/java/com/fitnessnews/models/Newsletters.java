@@ -16,7 +16,7 @@ public class Newsletters {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name= "newsletterID")
-	private Integer newsletterID;
+	private Long newsletterID;
 	
 	@Column(name = "datePublished")
 	private Date datePublished;
@@ -36,7 +36,7 @@ public class Newsletters {
 	@Column(name = "footer")
 	private String footer;
 
-	public Newsletters(Integer newsletterID, Date datePublished, String header, String authFirstName,
+	public Newsletters(Long newsletterID, Date datePublished, String header, String authFirstName,
 			String authLastName, String content, String footer) {
 		super();
 		this.newsletterID = newsletterID;
@@ -52,11 +52,11 @@ public class Newsletters {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Integer getNewsletterID() {
+	public Long getNewsletterID() {
 		return newsletterID;
 	}
 
-	public void setNewsletterID(Integer newsletterID) {
+	public void setNewsletterID(Long newsletterID) {
 		this.newsletterID = newsletterID;
 	}
 
