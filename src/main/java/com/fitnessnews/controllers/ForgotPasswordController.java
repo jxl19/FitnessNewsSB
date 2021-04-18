@@ -44,15 +44,19 @@ public class ForgotPasswordController {
 			URL resetPasswordLink = new URL("http://localhost:4200" + "/resetpass/?token=" + token);
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
-
+			return "{\"status\":\"success\", \"response\":\"An email has been sent to you\"}";
 		} catch (ResourceNotFoundException ex) {
 			model.addAttribute("error", ex.getMessage());
+			return "{\"status\":\"failure\", \"response\":\"This email could not be found\"}";
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Error while sending email");
+			return "{\"status\":\"failure\", \"response\":\"The email could not be sent\"}";
+
 		} catch (MalformedURLException url) {
 			model.addAttribute("error", "error creating url");
+			return "{\"status\":\"failure\", \"response\":\"Somehow, the link generation failed\"}";
+
 		}
-		return "working";
 	}
 
 	public void sendEmail(String recipientEmail, URL link) throws MessagingException, UnsupportedEncodingException {
@@ -94,6 +98,6 @@ public class ForgotPasswordController {
 		  model.addAttribute("message",
 		  "You have successfully changed your password."); }
 		  
-		  return "message";
+		  return "{\"status\":\"successful\", \"response\":\"Your password has been changed\"}";
 	}
 }
