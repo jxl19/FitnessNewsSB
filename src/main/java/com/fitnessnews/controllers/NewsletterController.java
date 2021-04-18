@@ -47,7 +47,7 @@ public class NewsletterController {
 		String subject = newsletter.getHeader();
 
 		String content = "<h3>" + newsletter.getHeader() + "</h3><br><p>By: " + newsletter.getAuthFirstName() + " " + newsletter.getAuthLastName() +
-				"</p><br><p>" + newsletter.getDatePublished() + "</p><br><br><p>" + newsletter.getContent() + "</p><br><br><br>" + newsletter.getFooter()
+				"</p><br><p>" + newsletter.getDatePublished() + "</p><br><br><p>" + newsletter.getContent() + "</p><br><br><br><p>" + newsletter.getFooter() + "</p>"
 				;
 
 		helper.setSubject(subject);
