@@ -39,7 +39,7 @@ public class ForgotPasswordController {
 		String token = RandomString.make(30);
 		try {
 			userService.updateResetPasswordToken(token, email);
-			String resetPasswordLink = Utility.getSiteURL(request) + "/resetpass/" + token;
+			String resetPasswordLink = Utility.getSiteURL(request) + "/resetpass/?token=" + token;
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
