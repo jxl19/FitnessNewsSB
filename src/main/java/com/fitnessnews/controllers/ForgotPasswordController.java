@@ -44,17 +44,17 @@ public class ForgotPasswordController {
 			URL resetPasswordLink = new URL("http://localhost:4200" + "/resetpass/?token=" + token);
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
-			return "{\"status\":\"Success\", \"response\":\",An email has been sent to you!\"}";
+			return "{\"status\":\"Success\", \"response\":\", An email has been sent to you!\"}";
 		} catch (ResourceNotFoundException ex) {
 			model.addAttribute("error", ex.getMessage());
-			return "{\"status\":\"Failure\", \"response\":\",This email could not be found.\"}";
+			return "{\"status\":\"Failure\", \"response\":\", This email could not be found.\"}";
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Error while sending email");
-			return "{\"status\":\"Failure\", \"response\":\",The email could not be sent.\"}";
+			return "{\"status\":\"Failure\", \"response\":\", The email could not be sent.\"}";
 
 		} catch (MalformedURLException url) {
 			model.addAttribute("error", "error creating url");
-			return "{\"status\":\"Failure\", \"response\":\",Somehow, the link generation failed.\"}";
+			return "{\"status\":\"Failure\", \"response\":\", Somehow, the link generation failed.\"}";
 
 		}
 	}
@@ -98,6 +98,6 @@ public class ForgotPasswordController {
 		  model.addAttribute("message",
 		  "You have successfully changed your password."); }
 		  
-		  return "{\"status\":\"Successful\", \"response\":\",Your password has been changed!\"}";
+		  return "{\"status\":\"Successful\", \"response\":\", Your password has been changed!\"}";
 	}
 }
