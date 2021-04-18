@@ -19,7 +19,7 @@ public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "userID")
-	private Long userID;
+	private Integer userID;
 	
 	@Column(name = "email")
 	private String email;
@@ -39,7 +39,7 @@ public class Users {
 	
 	public Users() {}
 
-	public Users(Long userID, String email, String password, Boolean superUser, String resetPasswordToken,
+	public Users(Integer userID, String email, String password, Boolean superUser, String resetPasswordToken,
 			PersonalInfo personalInfo) {
 		super();
 		this.userID = userID;
@@ -52,11 +52,11 @@ public class Users {
 
 
 
-	public Long getUserID() {
+	public Integer getUserID() {
 		return userID;
 	}
 
-	public void setUserID(Long userID) {
+	public void setUserID(Integer userID) {
 		this.userID = userID;
 	}
 

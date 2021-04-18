@@ -17,6 +17,7 @@ public class UserServices {
  
     public void updateResetPasswordToken(String token, String email) throws ResourceNotFoundException {
         Users user = userRepo.findByEmail(email);
+        System.out.println("in token method" + email);
         if (user != null) {
             user.setResetPasswordToken(token);
             userRepo.save(user);
