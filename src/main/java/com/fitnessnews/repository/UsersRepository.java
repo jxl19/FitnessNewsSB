@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.fitnessnews.models.Users;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Long> {
+public interface UsersRepository extends JpaRepository<Users, Integer> {
 	public Users findByEmail(String email);
 	public Users findByResetPasswordToken(String token);
 }

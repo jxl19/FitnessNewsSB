@@ -42,8 +42,8 @@ public class UserController {
         return ResponseEntity.ok().body(user);
 	}
 	
-	@PutMapping("/updateinfo")
-	public ResponseEntity<Users> updateUsers(@PathVariable(value = "id") Long userID,
+	@PutMapping("/updatepassword/{id}")
+	public ResponseEntity<Users> updateUsers(@PathVariable(value = "id") Integer userID,
 			@Valid @RequestBody Users userDetails) throws ResourceNotFoundException {
 		final Users user = usersRepository.findById(userID)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + userID));
