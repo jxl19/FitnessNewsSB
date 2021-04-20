@@ -1,6 +1,8 @@
 package com.fitnessnews.controllers;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -20,7 +22,6 @@ import org.json.*;
 import com.fitnessnews.exceptions.ResourceNotFoundException;
 import com.fitnessnews.models.Users;
 import com.fitnessnews.services.UserServices;
-import com.fitnessnews.utilities.Utility;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -39,19 +40,25 @@ public class ForgotPasswordController {
 		String token = RandomString.make(30);
 		try {
 			userService.updateResetPasswordToken(token, email);
-			String resetPasswordLink = "http://localhost:4200/resetpass?token=" + token;
+			URL resetPasswordLink = new URL("http://localhost:4200" + "/resetpass/?token=" + token);
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
-
+			return "{\"status\":\"Success\", \"response\":\", An email has been sent to you!\"}";
 		} catch (ResourceNotFoundException ex) {
 			model.addAttribute("error", ex.getMessage());
+			return "{\"status\":\"Failure\", \"response\":\", This email could not be found.\"}";
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Error while sending email");
+			return "{\"status\":\"Failure\", \"response\":\", The email could not be sent.\"}";
+
+		} catch (MalformedURLException url) {
+			model.addAttribute("error", "error creating url");
+			return "{\"status\":\"Failure\", \"response\":\", Somehow, the link generation failed.\"}";
+
 		}
-		return "working";
 	}
 
-	public void sendEmail(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
+	public void sendEmail(String recipientEmail, URL link) throws MessagingException, UnsupportedEncodingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
@@ -90,6 +97,6 @@ public class ForgotPasswordController {
 		  model.addAttribute("message",
 		  "You have successfully changed your password."); }
 		  
-		  return "message";
+		  return "{\"status\":\"Successful\", \"response\":\", Your password has been changed!\"}";
 	}
 }
