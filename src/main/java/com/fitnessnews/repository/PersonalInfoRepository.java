@@ -7,6 +7,6 @@ import com.fitnessnews.models.PersonalInfo;
 
 @Repository
 public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Integer>  {
-
 	
+	public PersonalInfo findByfName(String fName);
 }
