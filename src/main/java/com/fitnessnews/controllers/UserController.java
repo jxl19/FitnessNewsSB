@@ -2,9 +2,10 @@ package com.fitnessnews.controllers;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Optional.*;
 
 import com.fitnessnews.exceptions.ResourceNotFoundException;
 import com.fitnessnews.models.Users;
@@ -27,19 +27,22 @@ import com.fitnessnews.repository.UsersRepository;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class UserController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UsersRepository usersRepository;
 
 	@GetMapping("/users")
 	public List<Users> getAllUsers() {
+		LOGGER.info("A list of all users were displayed");
 		return usersRepository.findAll();
 	}
 	
 	@GetMapping("/users/{email}")
 	public ResponseEntity<Users> getEmployeeByEmail(@PathVariable(value = "email") String email) throws ResourceNotFoundException{
 		Users user = usersRepository.findByEmail(email);
-        return ResponseEntity.ok().body(user);
+        LOGGER.info("User "+email+ " has logged in");
+		return ResponseEntity.ok().body(user);
 	}
 	
 	@PutMapping("/updatepassword/{id}")
@@ -49,12 +52,14 @@ public class UserController {
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + userID));
 		user.setPassword(userDetails.getPassword());
 		final Users updatedUser = usersRepository.save(user);
+		LOGGER.info("User "+userID+" requested a password change");
 		return ResponseEntity.ok(updatedUser);
 	}
 	
 	@PostMapping("/registration")
     public Users createUser(@Valid @RequestBody Users user) {
-        return usersRepository.save(user);
+        LOGGER.info("A new user has been registered");
+		return usersRepository.save(user);
     }
 	
 }

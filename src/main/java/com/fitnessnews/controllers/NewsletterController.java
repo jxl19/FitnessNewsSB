@@ -1,20 +1,19 @@
 package com.fitnessnews.controllers;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,17 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fitnessnews.exceptions.ResourceNotFoundException;
 import com.fitnessnews.models.NewsletterSet;
 import com.fitnessnews.models.Newsletters;
-import com.fitnessnews.models.PersonalInfo;
 import com.fitnessnews.models.ResultSet;
-import com.fitnessnews.models.Users;
 import com.fitnessnews.repository.NewsletterRepository;
-import com.fitnessnews.repository.PersonalInfoRepository;
 import com.fitnessnews.repository.UsersRepository;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/newsletters")
 public class NewsletterController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(NewsletterController.class);
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -49,11 +46,13 @@ public class NewsletterController {
 
 	@GetMapping("/allnews")
 	public List<Newsletters> getAllNewsletters() {
+		LOGGER.info("A list of all newsletters were displayed");
 		return newsletterRepository.findAll();
 	}
 
 	@PostMapping("/createnews")
 	public Newsletters createNewsletter(@Valid @RequestBody Newsletters newsletter) {
+		LOGGER.info("A new newsletter was created");
 		return newsletterRepository.save(newsletter);
 	}
 
@@ -62,6 +61,7 @@ public class NewsletterController {
 			throws ResourceNotFoundException {
 		Newsletters newsletter = newsletterRepository.findById(newsletterID).orElseThrow(
 				() -> new ResourceNotFoundException("Newsletter not found for this id :: " + newsletterID));
+		LOGGER.info("Newsletter of id "+newsletterID+" was displayed");
 		return ResponseEntity.ok().body(newsletter);
 	}
 
@@ -79,6 +79,7 @@ public class NewsletterController {
 		newsletter.setFooter(newsletterDetails.getFooter());
 
 		final Newsletters updatedNewsletter = newsletterRepository.save(newsletter);
+		LOGGER.info("Newsletter of id "+newsletterID+" was updated");
 		return ResponseEntity.ok(updatedNewsletter);
 	}
 
@@ -110,6 +111,8 @@ public class NewsletterController {
 
 			helper.setText(content, true);
 
+			LOGGER.info("Subscribed users received an email notification of the newsletter");
+			
 			mailSender.send(message);
 		}
 	}

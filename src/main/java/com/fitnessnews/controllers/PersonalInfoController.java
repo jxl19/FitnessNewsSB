@@ -2,6 +2,8 @@ package com.fitnessnews.controllers;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,13 +24,15 @@ import com.fitnessnews.repository.PersonalInfoRepository;
 @CrossOrigin(origins = "*")
 @RequestMapping("/user")
 public class PersonalInfoController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PersonalInfoController.class);
 
 	@Autowired
 	private PersonalInfoRepository personalInfoRepository;
 	
 	@PostMapping("/create")
     public PersonalInfo createUser(@Valid @RequestBody PersonalInfo personalInfo) {
-        return personalInfoRepository.save(personalInfo);
+        LOGGER.info("A new user has been registered and their personal information was added to the database");
+		return personalInfoRepository.save(personalInfo);
     }
 	
 	@PutMapping("/update/{id}")
@@ -38,6 +42,7 @@ public class PersonalInfoController {
 		pInfo.setlName(personalInfo.getlName());
 		pInfo.setWantsMail(personalInfo.getWantsMail());
 		final PersonalInfo updatedPInfo = personalInfoRepository.save(pInfo);
+		LOGGER.info("User "+userID+"updated their personal information");
 		return ResponseEntity.ok(updatedPInfo);
 	}
 }
