@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,7 @@ import net.bytebuddy.utility.RandomString;
 @CrossOrigin(origins = "*")
 @RequestMapping("/reset")
 public class ForgotPasswordController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ForgotPasswordController.class);
 	@Autowired
 	private JavaMailSender mailSender;
 
@@ -43,16 +47,20 @@ public class ForgotPasswordController {
 			URL resetPasswordLink = new URL("http://localhost:4200" + "/resetpass/?token=" + token);
 			sendEmail(email, resetPasswordLink);
 			model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
+			LOGGER.info("A password link was sent to email: "+ email);
 			return "{\"status\":\"Success\", \"response\":\", An email has been sent to you!\"}";
 		} catch (ResourceNotFoundException ex) {
 			model.addAttribute("error", ex.getMessage());
+			LOGGER.error("The email address: "+email + " was not found on our database");
 			return "{\"status\":\"Failure\", \"response\":\", This email could not be found.\"}";
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			model.addAttribute("error", "Error while sending email");
+			LOGGER.error("The email could not be sent");
 			return "{\"status\":\"Failure\", \"response\":\", The email could not be sent.\"}";
 
 		} catch (MalformedURLException url) {
 			model.addAttribute("error", "error creating url");
+			LOGGER.error("Unable to generate link");
 			return "{\"status\":\"Failure\", \"response\":\", Somehow, the link generation failed.\"}";
 
 		}
@@ -75,7 +83,9 @@ public class ForgotPasswordController {
 		helper.setSubject(subject);
 
 		helper.setText(content, true);
-
+		
+		LOGGER.info("An email containing the link to reset password was sent to "+recipientEmail);
+		
 		mailSender.send(message);
 	}
 
